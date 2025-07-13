@@ -1,13 +1,18 @@
 <script setup lang="ts">
-import DataTable from '@/components/DataTable.vue'
+import DataTable from '@/components/Table/DataTable.vue'
+import ItemLimitSelect from '@/components/Table/ItemLimitSelect.vue'
+import TablePagination from '@/components/Table/TablePagination.vue'
 import { AllJobColumns } from '@/data/AllJobColumns.ts'
 import { BaseService } from '@/services/BaseService'
 import type { Job } from '@/interfaces/Job'
 import { ref, onMounted } from 'vue'
 
+const INITIAL_PAGE_INDEX = 0
+const pageSizes = [20, 30, 50, 100]
+
 const jobs = ref<Job[]>([])
 const loading = ref<boolean>(false)
-const error = ref<string|null>(null)
+const error = ref<string | null>(null)
 
 const fetchJobs = async () => {
   try {
@@ -21,20 +26,20 @@ const fetchJobs = async () => {
   }
 }
 
-onMounted(() => fetchJobs())
-
+onMounted(() => {
+  fetchJobs()
+})
 </script>
 
 <template>
   <div class="w-full">
     <h1 class="text-2xl font-bold mb-6">All Roles</h1>
-    <div v-if="loading" class="text-center py-4">
-      Loading jobs...
-    </div>
+    <div v-if="loading" class="text-center py-4">Loading jobs...</div>
     <div v-else-if="error" class="text-red-500 text-center py-4">
       {{ error }}
     </div>
 
-    <DataTable v-else :columns="AllJobColumns" :data="jobs" />
+    <DataTable v-else :columns="AllJobColumns" :data="jobs" :pageSizes="pageSizes" />
+    <!-- <TablePagination :total="100"/>  -->
   </div>
 </template>
