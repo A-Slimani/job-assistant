@@ -1,7 +1,7 @@
 import type { ColumnDef } from '@tanstack/vue-table'
 import type { Job } from '@/interfaces/Job'
 import { h } from 'vue'
-
+import SelectComponent from '@/components/Table/SelectComponent.vue'
 
 export const AllJobColumns: ColumnDef<Job>[] = [
   {
@@ -50,14 +50,16 @@ export const AllJobColumns: ColumnDef<Job>[] = [
     accessorKey: 'createdAt',
     header: 'Created At',
     cell: ({ row }) => {
-      const formattedDate: string = new Date(row.getValue('createdAt')).toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
-      }).replace(/\//g, '-')
+      const formattedDate: string = new Date(row.getValue('createdAt'))
+        .toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+        })
+        .replace(/\//g, '-')
 
       return h('div', formattedDate)
-    }
+    },
   },
   {
     header: 'Post Date',
@@ -65,10 +67,12 @@ export const AllJobColumns: ColumnDef<Job>[] = [
   },
   {
     accessorKey: 'status',
-    header: 'Status (to change to a dropdown)',
+    header: 'Status',
     cell: ({ row }) => {
-
-      return h('div', row.getValue('status'))
-    }
+      return h(SelectComponent, {
+        selectedOption: row.original.status,
+        optionList: [1, 2, 3],
+      })
+    },
   },
 ]
