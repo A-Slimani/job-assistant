@@ -26,7 +26,5 @@ export const useJobStore = defineStore('job', {
     },
   },
 
-  getters: {
-    // some computed functions e.g. filters
-  },
+  getters: {},
 })

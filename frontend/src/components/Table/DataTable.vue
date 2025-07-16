@@ -87,7 +87,12 @@ watch(currentPage, (newValue) => {
       :total="data.length"
       :default-page="1"
     >
-      <SelectComponent v-model:selected-option="selectedPageSize" :option-list="pageSizes" />
+      <SelectComponent
+        v-model:selected-option="selectedPageSize"
+        :option-list="pageSizes"
+        placeholder="page size"
+        label="page size"
+      />
       <PaginationContent v-slot="{ items }">
         <PaginationPrevious />
         <template v-for="(item, index) in items" :key="index">

@@ -9,6 +9,11 @@ import {
   SelectLabel,
 } from '@/components/ui/select'
 
+const props = defineProps<{
+  placeholder: string
+  label: string
+}>()
+
 const optionList = defineModel<TData[]>('optionList', { required: true })
 const selectedOption = defineModel<TData>('selectedOption', { required: true })
 </script>
@@ -16,11 +21,11 @@ const selectedOption = defineModel<TData>('selectedOption', { required: true })
 <template>
   <Select v-model="selectedOption">
     <SelectTrigger class="w-[180px]">
-      <SelectValue placeholder="Select Page Size" />
+      <SelectValue :placeholder="props.placeholder" />
     </SelectTrigger>
     <SelectContent>
       <SelectGroup>
-        <SelectLabel>Page Size</SelectLabel>
+        <SelectLabel>{{ props.label }}</SelectLabel>
         <SelectItem v-for="option in optionList" :value="option" :key="option">
           {{ option }}
         </SelectItem>
