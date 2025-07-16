@@ -1,6 +1,7 @@
 <script setup lang="ts" generic="TData, TValue">
 import type { ColumnDef } from '@tanstack/vue-table'
 import { ref, watch } from 'vue'
+import SelectComponent from '@/components/Table/SelectComponent.vue'
 import {
   FlexRender,
   getCoreRowModel,
@@ -15,15 +16,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-} from '@/components/ui/select'
 import {
   Pagination,
   PaginationContent,
@@ -58,19 +50,11 @@ const table = useVueTable({
   },
 })
 
-const handlePageSizeChange = (n: number) => {
-  table.setPageSize(n)
-}
-
-const handlePageChange = (n: number) => {
-  table.setPageIndex(n)
-}
-
 watch(selectedPageSize, (newValue) => {
-  handlePageSizeChange(newValue)
+  table.setPageSize(newValue)
 })
 watch(currentPage, (newValue) => {
-  handlePageChange(newValue)
+  table.setPageIndex(newValue)
 })
 </script>
 
@@ -103,17 +87,12 @@ watch(currentPage, (newValue) => {
       :total="data.length"
       :default-page="1"
     >
-      <Select v-model="selectedPageSize">
-        <SelectTrigger class="w-[80px]">
-          <SelectValue :placeholder="selectedPageSize.toString()" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>Page Size</SelectLabel>
-            <SelectItem v-for="size in pageSizes" :value="size" :key="size">{{ size }}</SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+      <SelectComponent
+        v-model:selected-option="selectedPageSize"
+        :option-list="pageSizes"
+        placeholder="page size"
+        label="page size"
+      />
       <PaginationContent v-slot="{ items }">
         <PaginationPrevious />
         <template v-for="(item, index) in items" :key="index">

@@ -1,33 +1,18 @@
 <script setup lang="ts">
 import DataTable from '@/components/Table/DataTable.vue'
-import ItemLimitSelect from '@/components/Table/ItemLimitSelect.vue'
-import TablePagination from '@/components/Table/TablePagination.vue'
+import { useJobStore } from '@/stores/JobStore'
 import { AllJobColumns } from '@/data/AllJobColumns.ts'
-import { BaseService } from '@/services/BaseService'
-import type { Job } from '@/interfaces/Job'
-import { ref, onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
+import { onMounted } from 'vue'
 
-const INITIAL_PAGE_INDEX = 0
 const pageSizes = [20, 30, 50, 100]
 
-const jobs = ref<Job[]>([])
-const loading = ref<boolean>(false)
-const error = ref<string | null>(null)
+const jobStore = useJobStore()
 
-const fetchJobs = async () => {
-  try {
-    loading.value = true
-    jobs.value = await BaseService('Job').getAll()
-  } catch (e) {
-    error.value = 'Failed to load jobs'
-    console.error(e)
-  } finally {
-    loading.value = false
-  }
-}
+const { loading, error, jobs } = storeToRefs(jobStore)
 
 onMounted(() => {
-  fetchJobs()
+  if (!jobs.value.length) jobStore.fetchJobs()
 })
 </script>
 
@@ -40,6 +25,5 @@ onMounted(() => {
     </div>
 
     <DataTable v-else :columns="AllJobColumns" :data="jobs" :pageSizes="pageSizes" />
-    <!-- <TablePagination :total="100"/>  -->
   </div>
 </template>
