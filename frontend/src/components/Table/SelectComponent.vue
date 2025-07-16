@@ -15,7 +15,7 @@ const props = defineProps<{
 }>()
 
 const optionList = defineModel<TData[]>('optionList', { required: true })
-const selectedOption = defineModel<TData>('selectedOption', { required: true })
+const selectedOption = defineModel<TData>('selectedOption')
 </script>
 
 <template>

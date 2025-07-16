@@ -26,5 +26,9 @@ export const useJobStore = defineStore('job', {
     },
   },
 
-  getters: {},
+  getters: {
+    // savedRoles(): Job[] {
+    //   return this.jobs.filter((job) => job.status !== 'None')
+    // },
+  },
 })
