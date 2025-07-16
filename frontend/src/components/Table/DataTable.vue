@@ -6,7 +6,6 @@ import {
   FlexRender,
   getCoreRowModel,
   getPaginationRowModel,
-  getFilteredRowModel,
   useVueTable,
 } from '@tanstack/vue-table'
 import {
