@@ -75,7 +75,7 @@ export const AllJobColumns: ColumnDef<Job>[] = [
             console.error(error)
           }
         },
-        optionList: ['None', 'Saved', 'In Progress', 'Rejected'],
+        optionList: ['None', 'Saved', 'In Progress', 'Rejected', 'Archived'],
         placeholder: '-',
         label: 'Status',
       })

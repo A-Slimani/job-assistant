@@ -28,10 +28,11 @@ import {
 const props = defineProps<{
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-  pageSizes: number[]
+  includePageSizes?: boolean
 }>()
 
-const selectedPageSize = ref<number>(props.pageSizes[0])
+const pageSizes = [20, 30, 50, 100]
+const selectedPageSize = ref<number>(pageSizes[0])
 const currentPage = ref<number>(1)
 
 const table = useVueTable({
@@ -45,7 +46,7 @@ const table = useVueTable({
   getPaginationRowModel: getPaginationRowModel(),
   initialState: {
     pagination: {
-      pageSize: props.pageSizes[0],
+      pageSize: pageSizes[0],
     },
   },
 })
@@ -88,6 +89,7 @@ watch(currentPage, (newValue) => {
       :default-page="1"
     >
       <SelectComponent
+        v-if="props.includePageSizes"
         v-model:selected-option="selectedPageSize"
         :option-list="pageSizes"
         placeholder="page size"

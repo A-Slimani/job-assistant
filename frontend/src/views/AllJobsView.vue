@@ -5,8 +5,6 @@ import { AllJobColumns } from '@/data/AllJobColumns.ts'
 import { storeToRefs } from 'pinia'
 import { onMounted } from 'vue'
 
-const pageSizes = [20, 30, 50, 100]
-
 const jobStore = useJobStore()
 
 const { loading, error, jobs } = storeToRefs(jobStore)
@@ -24,6 +22,6 @@ onMounted(() => {
       {{ error }}
     </div>
 
-    <DataTable v-else :columns="AllJobColumns" :data="jobs" :pageSizes="pageSizes" />
+    <DataTable v-else :columns="AllJobColumns" :data="jobs" :include-page-sizes="true" />
   </div>
 </template>

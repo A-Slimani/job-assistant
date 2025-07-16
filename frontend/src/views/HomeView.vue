@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import DataTable from '@/components/Table/DataTable.vue'
+import { AllJobColumns } from '@/data/AllJobColumns'
 import { useJobStore } from '@/stores/JobStore'
+import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 
 const jobStore = useJobStore()
@@ -19,7 +21,11 @@ onMounted(() => {
     <div v-else-if="error" class="text-red-500 text-center py-4">
       {{ error }}
     </div>
-    <div v-for="job in jobs" :key="String(job)">
-    </div>
+
+    <DataTable
+      v-else
+      :columns="AllJobColumns"
+      :data="jobs.filter((job) => job.status !== 'None')"
+    />
   </div>
 </template>
