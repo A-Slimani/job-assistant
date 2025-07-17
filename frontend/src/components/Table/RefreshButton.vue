@@ -6,7 +6,6 @@ import { toast } from 'vue-sonner'
 const jobStore = useJobStore()
 
 const updateJobs = () => {
-  // Run Fake API wait here
   toast.promise(jobStore.updateJobs(), {
     loading: 'scraping new roles...',
     success: () => {

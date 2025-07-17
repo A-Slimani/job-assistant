@@ -6,9 +6,11 @@ import { defineStore } from 'pinia'
 export const useJobStore = defineStore('job', {
   state: () => ({
     jobs: [] as Job[],
+    error: null as string | null,
     loading: false,
     refresh: false,
-    error: null as string | null,
+    isDialogOpen: false,
+    selectedJob: null as Job | null,
   }),
 
   actions: {
@@ -36,6 +38,13 @@ export const useJobStore = defineStore('job', {
       } finally {
         this.refresh = false
       }
+    },
+    openJobDialog(job: Job) {
+      this.isDialogOpen = true
+      this.selectedJob = job
+    },
+    closeJobDialog() {
+      this.isDialogOpen = false
     },
   },
 

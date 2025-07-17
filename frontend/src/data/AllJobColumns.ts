@@ -2,6 +2,8 @@ import SelectComponent from '@/components/Table/SelectComponent.vue'
 import type { ColumnDef } from '@tanstack/vue-table'
 import type { Job } from '@/interfaces/Job'
 import { BaseService } from '@/services/BaseService'
+import { useJobStore } from '@/stores/JobStore'
+import { JOB_STATUS_OPTIONS } from './StatusListOptions'
 import { h } from 'vue'
 
 export const AllJobColumns: ColumnDef<Job>[] = [
@@ -13,7 +15,19 @@ export const AllJobColumns: ColumnDef<Job>[] = [
         typeof row.getValue('title') === 'string' ? row.getValue('title') : ''
       const length: number = rowValue.length
       const updatedValue = length > 40 ? `${rowValue.substring(0, 40)} ...` : rowValue
-      return h('div', { class: 'w-40' }, updatedValue)
+      const jobStore = useJobStore()
+      return h(
+        'a',
+        {
+          class: 'hover:underline',
+          href: row.original.link,
+          target: '_blank',
+          onClick: () => {
+            jobStore.openJobDialog(row.original)
+          },
+        },
+        updatedValue,
+      )
     },
   },
   {
@@ -74,8 +88,7 @@ export const AllJobColumns: ColumnDef<Job>[] = [
             console.error(error)
           }
         },
-        optionList: ['None', 'Saved', 'Applied', 'Rejected', 'Archived'],
-        placeholder: '-',
+        optionList: JOB_STATUS_OPTIONS,
         label: 'Status',
       })
     },

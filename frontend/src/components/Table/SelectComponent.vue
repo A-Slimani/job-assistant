@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/select'
 
 const props = defineProps<{
-  placeholder: string
+  placeholder?: string
   label: string
 }>()
 
