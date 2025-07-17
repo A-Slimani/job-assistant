@@ -2,6 +2,7 @@
 import type { ColumnDef } from '@tanstack/vue-table'
 import { ref, watch } from 'vue'
 import SelectComponent from '@/components/Table/SelectComponent.vue'
+import RefreshButton from '@/components/Table/RefreshButton.vue'
 import {
   FlexRender,
   getCoreRowModel,
@@ -25,10 +26,11 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination'
 
+// VUE TABLE
 const props = defineProps<{
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-  includePageSizes?: boolean
+  isAllJobs?: boolean
 }>()
 
 const pageSizes = [20, 30, 50, 100]
@@ -51,6 +53,7 @@ const table = useVueTable({
   },
 })
 
+// WATCHERS
 watch(selectedPageSize, (newValue) => {
   table.setPageSize(newValue)
 })
@@ -82,6 +85,7 @@ watch(currentPage, (newValue) => {
       </Table>
     </div>
     <Pagination
+      class="flex justify-between"
       v-slot="{ page }"
       v-model:page="currentPage"
       :items-per-page="selectedPageSize"
@@ -89,7 +93,7 @@ watch(currentPage, (newValue) => {
       :default-page="1"
     >
       <SelectComponent
-        v-if="props.includePageSizes"
+        v-if="props.isAllJobs"
         v-model:selected-option="selectedPageSize"
         :option-list="pageSizes"
         placeholder="page size"
@@ -108,6 +112,7 @@ watch(currentPage, (newValue) => {
         <PaginationEllipsis :index="4" />
         <PaginationNext />
       </PaginationContent>
+      <RefreshButton />
     </Pagination>
   </div>
 </template>

@@ -28,7 +28,6 @@ export const AllJobColumns: ColumnDef<Job>[] = [
     },
   },
   {
-    // maybe make this a tag
     accessorKey: 'website',
     header: 'Website',
     cell: ({ row }) =>
@@ -75,7 +74,7 @@ export const AllJobColumns: ColumnDef<Job>[] = [
             console.error(error)
           }
         },
-        optionList: ['None', 'Saved', 'In Progress', 'Rejected', 'Archived'],
+        optionList: ['None', 'Saved', 'Applied', 'Rejected', 'Archived'],
         placeholder: '-',
         label: 'Status',
       })
