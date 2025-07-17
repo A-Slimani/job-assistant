@@ -4,6 +4,7 @@ import { useJobStore } from '@/stores/JobStore'
 import { AllJobColumns } from '@/data/AllJobColumns.ts'
 import { storeToRefs } from 'pinia'
 import { onMounted } from 'vue'
+import JobDialog from '@/components/JobDialog.vue'
 
 const jobStore = useJobStore()
 
@@ -22,5 +23,6 @@ onMounted(() => {
       {{ error }}
     </div>
     <DataTable v-else :columns="AllJobColumns" :data="jobs" :is-all-jobs="true" />
+    <JobDialog />
   </div>
 </template>
