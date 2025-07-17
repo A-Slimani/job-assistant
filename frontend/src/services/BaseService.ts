@@ -25,7 +25,7 @@ export const BaseService = (resource: string) => {
 
   const updateObject = async <T>(id: string, object: T): Promise<T> => {
     try {
-      const response = await fetch(`${API_URL}/api/${resource}/${id}`, {
+      const response = await fetch(`${API_URL}/api/${resource}/${id}/update`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { Toaster } from 'vue-sonner'
+import 'vue-sonner/style.css'
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -47,4 +49,5 @@ const navigateTo = (path: string) => {
       </main>
     </ScrollArea>
   </div>
+  <Toaster theme="dark" />
 </template>

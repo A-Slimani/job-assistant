@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 using backend.Models;
 
 namespace backend.Controllers
@@ -14,7 +15,7 @@ namespace backend.Controllers
             return Ok(await context.Jobs.ToListAsync());
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}/update")]
         public async Task<IActionResult> UpdateJobStatus(string id, Job job)
         {
             try
@@ -32,6 +33,37 @@ namespace backend.Controllers
             {
                Console.WriteLine($"Error updating job {id}: {ex.Message}");
                return StatusCode(500, "An error occured while updating the job");
+            }
+        }
+
+        [HttpPost("update-all")]
+        public async Task<IActionResult> RunScraper()
+        {
+            try
+            {
+                var process = Process.Start("job-scraper");
+                await process.WaitForExitAsync();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+               Console.WriteLine($"Error running database update: {ex.Message}"); 
+               return StatusCode(500, "An error occured while running the refresh");
+            }
+        }
+
+        [HttpPost("test")]
+        public async Task<IActionResult> TestProcess()
+        {
+            try
+            {
+                await Task.Delay(5000); // 5 seconds
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error running test delay: {ex.Message}");
+                return StatusCode(500, "An error occured while running the test delay");
             }
         }
     }

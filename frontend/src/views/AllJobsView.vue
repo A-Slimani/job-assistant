@@ -21,7 +21,6 @@ onMounted(() => {
     <div v-else-if="error" class="text-red-500 text-center py-4">
       {{ error }}
     </div>
-
-    <DataTable v-else :columns="AllJobColumns" :data="jobs" :include-page-sizes="true" />
+    <DataTable v-else :columns="AllJobColumns" :data="jobs" :is-all-jobs="true" />
   </div>
 </template>
