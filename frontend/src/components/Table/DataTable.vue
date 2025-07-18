@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="TData, TValue">
-import type { ColumnDef } from '@tanstack/vue-table'
+import type { ColumnDef, SortingState } from '@tanstack/vue-table'
 import { ref, watch } from 'vue'
 import SelectComponent from '@/components/Table/SelectComponent.vue'
 import RefreshButton from '@/components/Table/RefreshButton.vue'
@@ -7,6 +7,7 @@ import {
   FlexRender,
   getCoreRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   useVueTable,
 } from '@tanstack/vue-table'
 import {
@@ -25,6 +26,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination'
+import { valueUpdater } from '../ui/table/utils'
 
 // VUE TABLE
 const props = defineProps<{
@@ -36,6 +38,9 @@ const props = defineProps<{
 const pageSizes = [20, 30, 50, 100]
 const selectedPageSize = ref<number>(pageSizes[0])
 const currentPage = ref<number>(1)
+const sorting = ref<SortingState>([])
+
+console.log('Raw columns input: ', JSON.parse(JSON.stringify(props.columns)))
 
 const table = useVueTable({
   get data() {
@@ -44,13 +49,21 @@ const table = useVueTable({
   get columns() {
     return props.columns
   },
-  getCoreRowModel: getCoreRowModel(),
-  getPaginationRowModel: getPaginationRowModel(),
   initialState: {
     pagination: {
       pageSize: pageSizes[0],
     },
   },
+  state: {
+    get sorting() {
+      return sorting.value
+    },
+  },
+  onSortingChange: (updaterOrValue) => valueUpdater(updaterOrValue, sorting),
+  getCoreRowModel: getCoreRowModel(),
+  getSortedRowModel: getSortedRowModel(),
+  getPaginationRowModel: getPaginationRowModel(),
+  debugTable: true,
 })
 
 // WATCHERS
@@ -112,7 +125,7 @@ watch(currentPage, (newValue) => {
         <PaginationEllipsis :index="4" />
         <PaginationNext />
       </PaginationContent>
-      <RefreshButton />
+      <RefreshButton v-if="props.isAllJobs" />
     </Pagination>
   </div>
 </template>

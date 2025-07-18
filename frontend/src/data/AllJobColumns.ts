@@ -4,12 +4,15 @@ import type { Job } from '@/interfaces/Job'
 import { BaseService } from '@/services/BaseService'
 import { useJobStore } from '@/stores/JobStore'
 import { JOB_STATUS_OPTIONS } from './StatusListOptions'
+import { Button } from '@/components/ui/button'
+import { ArrowUpDown } from 'lucide-vue-next'
 import { h } from 'vue'
 
 export const AllJobColumns: ColumnDef<Job>[] = [
   {
     accessorKey: 'title',
-    header: 'Job Title',
+    // header: 'Job Title',
+    header: (headerContext) => {},
     cell: ({ row }) => {
       const rowValue: string =
         typeof row.getValue('title') === 'string' ? row.getValue('title') : ''
@@ -55,8 +58,20 @@ export const AllJobColumns: ColumnDef<Job>[] = [
       ),
   },
   {
+    id: 'createdAt',
     accessorKey: 'createdAt',
-    header: 'Created At',
+    header: () => {
+      return h(
+        Button,
+        {
+          variant: 'ghost',
+          onClick: () => {
+            // column.toggleSorting(column.getIsSorted() === 'asc')
+          },
+        },
+        () => ['Created At', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })],
+      )
+    },
     cell: ({ row }) => {
       const formattedDate: string = new Date(row.getValue('createdAt'))
         .toLocaleDateString('en-GB', {
