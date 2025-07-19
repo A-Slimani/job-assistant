@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import DataTable from '@/components/Table/DataTable.vue'
 import { useJobStore } from '@/stores/JobStore'
-import { AllJobColumns } from '@/data/AllJobColumns.ts'
+import { JobColumns } from '@/data/JobColumns.ts'
 import { storeToRefs } from 'pinia'
 import { onMounted } from 'vue'
 import JobDialog from '@/components/JobDialog.vue'
@@ -22,7 +22,7 @@ onMounted(() => {
     <div v-else-if="error" class="text-red-500 text-center py-4">
       {{ error }}
     </div>
-    <DataTable v-else :columns="AllJobColumns" :data="jobs" :is-all-jobs="true" />
+    <DataTable v-else :columns="JobColumns" :data="jobs" :is-all-jobs="true" />
     <JobDialog />
   </div>
 </template>

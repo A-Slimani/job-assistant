@@ -1,13 +1,16 @@
-<script setup lang="ts" generic="TData, TValue">
-import type { ColumnDef } from '@tanstack/vue-table'
+<script setup lang="ts" generic="TData, TColumns">
+import type { SortingState } from '@tanstack/vue-table'
 import { ref, watch } from 'vue'
 import SelectComponent from '@/components/Table/SelectComponent.vue'
 import RefreshButton from '@/components/Table/RefreshButton.vue'
+import { ChevronDown, ChevronUp } from 'lucide-vue-next'
+import type { Job } from '@/interfaces/Job'
 import {
   FlexRender,
   getCoreRowModel,
   getPaginationRowModel,
   useVueTable,
+  getSortedRowModel,
 } from '@tanstack/vue-table'
 import {
   Table,
@@ -25,17 +28,19 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination'
+import type { JobColumns } from '@/data/JobColumns'
 
 // VUE TABLE
 const props = defineProps<{
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+  columns: typeof JobColumns
+  data: Job[]
   isAllJobs?: boolean
 }>()
 
 const pageSizes = [20, 30, 50, 100]
 const selectedPageSize = ref<number>(pageSizes[0])
 const currentPage = ref<number>(1)
+const sorting = ref<SortingState>([])
 
 const table = useVueTable({
   get data() {
@@ -44,13 +49,23 @@ const table = useVueTable({
   get columns() {
     return props.columns
   },
-  getCoreRowModel: getCoreRowModel(),
-  getPaginationRowModel: getPaginationRowModel(),
+  state: {
+    get sorting() {
+      return sorting.value
+    },
+  },
   initialState: {
     pagination: {
       pageSize: pageSizes[0],
     },
   },
+  onSortingChange: (updaterOrValue) => {
+    sorting.value =
+      typeof updaterOrValue === 'function' ? updaterOrValue(sorting.value) : updaterOrValue
+  },
+  getCoreRowModel: getCoreRowModel(),
+  getSortedRowModel: getSortedRowModel(),
+  getPaginationRowModel: getPaginationRowModel(),
 })
 
 // WATCHERS
@@ -68,8 +83,16 @@ watch(currentPage, (newValue) => {
       <Table>
         <TableHeader>
           <TableRow v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
-            <TableHead v-for="header in headerGroup.headers" :key="header.id">
-              <FlexRender :render="header.column.columnDef.header" :props="header.getContext" />
+            <TableHead
+              v-for="header in headerGroup.headers"
+              :key="header.id"
+              @click="header.column.getToggleSortingHandler()?.($event)"
+            >
+              <div class="flex gap-2">
+                <FlexRender :render="header.column.columnDef.header" :props="header.getContext" />
+                <ChevronUp v-if="header.column.getIsSorted() === 'asc'" :size="18" />
+                <ChevronDown v-if="header.column.getIsSorted() === 'desc'" :size="18" />
+              </div>
             </TableHead>
           </TableRow>
         </TableHeader>

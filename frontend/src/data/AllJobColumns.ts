@@ -6,6 +6,7 @@ import { useJobStore } from '@/stores/JobStore'
 import { JOB_STATUS_OPTIONS } from './StatusListOptions'
 import { h } from 'vue'
 
+// NOT IN USE ANYMORE REMOVE LATER ???
 export const AllJobColumns: ColumnDef<Job>[] = [
   {
     accessorKey: 'title',
@@ -56,7 +57,9 @@ export const AllJobColumns: ColumnDef<Job>[] = [
   },
   {
     accessorKey: 'createdAt',
-    header: 'Created At',
+    header: () => {
+      return 'Created At'
+    },
     cell: ({ row }) => {
       const formattedDate: string = new Date(row.getValue('createdAt'))
         .toLocaleDateString('en-GB', {
@@ -93,4 +96,4 @@ export const AllJobColumns: ColumnDef<Job>[] = [
       })
     },
   },
-]
+] as const satisfies ColumnDef<Job>[]

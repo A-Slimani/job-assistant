@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { RefreshCcw } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { useJobStore } from '@/stores/JobStore'
 import { toast } from 'vue-sonner'
@@ -17,5 +18,5 @@ const updateJobs = () => {
 </script>
 
 <template>
-  <Button variant="outline" @click="updateJobs"> 🔄 update </Button>
+  <Button variant="outline" @click="updateJobs"> update <RefreshCcw /></Button>
 </template>
