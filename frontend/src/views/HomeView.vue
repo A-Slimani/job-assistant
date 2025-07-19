@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import DataTable from '@/components/Table/DataTable.vue'
-import { AllJobColumns } from '@/data/AllJobColumns'
 import { useJobStore } from '@/stores/JobStore'
 import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
+import { JobColumns } from '@/data/JobColumns'
 
 const jobStore = useJobStore()
 
 const { loading, error, jobs } = storeToRefs(jobStore)
+
+const fieldsToIgnore = ['None', 'Archived']
 
 onMounted(() => {
   if (!jobs.value.length) jobStore.fetchJobs()
@@ -24,8 +26,8 @@ onMounted(() => {
 
     <DataTable
       v-else
-      :columns="AllJobColumns"
-      :data="jobs.filter((job) => job.status !== 'None')"
+      :columns="JobColumns"
+      :data="jobs.filter((job) => !fieldsToIgnore.includes(job.status))"
     />
   </div>
 </template>
