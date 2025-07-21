@@ -5,12 +5,13 @@ import SelectComponent from '@/components/Table/SelectComponent.vue'
 import { BaseService } from '@/services/BaseService'
 import { JOB_STATUS_OPTIONS } from './StatusListOptions'
 import { h } from 'vue'
+import TableDropdown from '@/components/Table/TableDropdown.vue'
 
 const columnHelper = createColumnHelper<Job>()
 
 export const JobColumns = [
   columnHelper.accessor('title', {
-    header: 'Title',
+    header: () => 'Title',
     cell: (info) => {
       const jobStore = useJobStore()
       return h(
@@ -59,7 +60,9 @@ export const JobColumns = [
   }),
   // TODO: add Posted date later
   columnHelper.accessor('status', {
-    header: 'Status',
+    header: () => {
+      return 'Status'
+    },
     cell: (info) => {
       return h(SelectComponent, {
         selectedOption: info.row.original.status,

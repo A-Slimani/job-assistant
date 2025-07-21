@@ -1,15 +1,14 @@
-<template>
-  <div class="about">
-    <h1>This is an about page</h1>
-  </div>
-</template>
+<script lang="ts" setup>
+import TableDropdown from '@/components/Table/TableDropdown.vue'
+import type { Checkbox } from '@/interfaces/Checkbox'
+import { ref } from 'vue'
 
-<style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
-</style>
+const values = ['ten', 'eleven', 'twenty']
+
+const checkedValues = ref<Checkbox[]>(values.map((v) => ({ key: v, value: true })))
+</script>
+
+<template>
+  <TableDropdown v-model="checkedValues" header="filters" />
+  <p>{{ checkedValues }}</p>
+</template>

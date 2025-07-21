@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="TData, TColumns">
-import type { SortingState } from '@tanstack/vue-table'
+import type { SortingState, ColumnFiltersState } from '@tanstack/vue-table'
 import { ref, watch } from 'vue'
 import SelectComponent from '@/components/Table/SelectComponent.vue'
 import RefreshButton from '@/components/Table/RefreshButton.vue'
@@ -11,6 +11,10 @@ import {
   getPaginationRowModel,
   useVueTable,
   getSortedRowModel,
+  getFilteredRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFacetedMinMaxValues,
 } from '@tanstack/vue-table'
 import {
   Table,
@@ -29,6 +33,7 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination'
 import type { JobColumns } from '@/data/JobColumns'
+import TableDropdown from './TableDropdown.vue'
 
 // VUE TABLE
 const props = defineProps<{
@@ -41,6 +46,8 @@ const pageSizes = [20, 30, 50, 100]
 const selectedPageSize = ref<number>(pageSizes[0])
 const currentPage = ref<number>(1)
 const sorting = ref<SortingState>([])
+const columnFilters = ref<ColumnFiltersState>([])
+const globalFilter = ref('')
 
 const table = useVueTable({
   get data() {
@@ -53,17 +60,35 @@ const table = useVueTable({
     get sorting() {
       return sorting.value
     },
+    get columnFilters() {
+      return columnFilters.value
+    },
+    get globalFilter() {
+      return globalFilter.value
+    },
   },
   initialState: {
     pagination: {
       pageSize: pageSizes[0],
     },
   },
+  onColumnFiltersChange: (updaterOrValue) => {
+    columnFilters.value =
+      typeof updaterOrValue == 'function' ? updaterOrValue(columnFilters.value) : updaterOrValue
+  },
+  onGlobalFilterChange: (updaterOrValue) => {
+    globalFilter.value =
+      typeof updaterOrValue === 'function' ? updaterOrValue(globalFilter.value) : updaterOrValue
+  },
   onSortingChange: (updaterOrValue) => {
     sorting.value =
       typeof updaterOrValue === 'function' ? updaterOrValue(sorting.value) : updaterOrValue
   },
   getCoreRowModel: getCoreRowModel(),
+  getFilteredRowModel: getFilteredRowModel(),
+  getFacetedRowModel: getFacetedRowModel(),
+  getFacetedUniqueValues: getFacetedUniqueValues(),
+  getFacetedMinMaxValues: getFacetedMinMaxValues(),
   getSortedRowModel: getSortedRowModel(),
   getPaginationRowModel: getPaginationRowModel(),
 })
@@ -89,7 +114,8 @@ watch(currentPage, (newValue) => {
               @click="header.column.getToggleSortingHandler()?.($event)"
             >
               <div class="flex gap-2">
-                <FlexRender :render="header.column.columnDef.header" :props="header.getContext" />
+                <FlexRender :render="header.column.columnDef.header" :props="header.getContext()" />
+                <!-- Create another icon for sorting and remove the click above -->
                 <ChevronUp v-if="header.column.getIsSorted() === 'asc'" :size="18" />
                 <ChevronDown v-if="header.column.getIsSorted() === 'desc'" :size="18" />
               </div>
